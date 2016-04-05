@@ -9,7 +9,7 @@
 # Variables globales #
 ######################
 
-# Herramientas básicas para el script
+# Herramientas básicas necesarias para ejecutar el script
 MKTEMP=$(which mktemp 2>/dev/null)
 GREP=$(which grep 2>/dev/null)
 FIND=$(which find 2>/dev/null)
@@ -20,9 +20,19 @@ ZIP=$(which zip 2>/dev/null)
 VERSION="3"
 COMPLETO="NO"
 
-# Hacemos una copia del valor de la variable LANG para poder restaurarla.
-LANG_BAK=$LANG
-
+################################################################################
+# Comprueba si están disponible las herramientas necesarias para ejecutar
+# el script.
+# Globales:
+#   MKTEMP
+#   GREP
+#   FIND
+#   ZIP
+# Argumentos:
+#   Ninguno
+# Retorno:
+#   Ninguno
+################################################################################
 function comprobar_herramientas_necesarias() {
   # Abandonar si no se encuentra alguna de las herramientas
 
@@ -47,6 +57,15 @@ function comprobar_herramientas_necesarias() {
   fi
 }
 
+################################################################################
+# Imprime la ayuda para usar el script y finaliza la ejecución del mismo
+# Globales:
+#   Ninguno
+# Argumentos:
+#   Ninguno
+# Retorno:
+#   Ninguno
+################################################################################
 function imprimir_ayuda() {
   echo
   echo "Sintaxis del comando: $0 [opciones]."
@@ -75,6 +94,16 @@ function imprimir_ayuda() {
   exit 0
 }
 
+################################################################################
+# Imprime mensaje de error cuando una opción ingresada no es reconocida y
+# finaliza la ejecución del script.
+# Globales:
+#   Ninguno
+# Argumentos:
+#   Parámetros del script
+# Retorno:
+#   Ninguno
+################################################################################
 function imprimir_opcion_no_reconocida() {
   echo
   echo "Opción no reconocida: '$opcion'." > /dev/stderr
@@ -83,6 +112,19 @@ function imprimir_opcion_no_reconocida() {
   exit 1
 }
 
+################################################################################
+# Analiza los parámetros del script e inicializa las variables globales
+# necesarias para la ejecución del mismo.
+# Globales:
+#   LOCALIZACION
+#   RAE
+#   VERSION
+#   COMPLETO
+# Argumentos:
+#   Parámetros del script
+# Retorno:
+#   Ninguno
+################################################################################
 function analizar_parametros() {
   # Realizar el análisis de los parámetros de la línea de comandos
 
@@ -122,13 +164,23 @@ function analizar_parametros() {
   done
 }
 
+################################################################################
+# Verifica si se pasó una localización como parámetro y se asigna a la variable
+# LANG.
+# Globales:
+#   LOCALIZACION
+#   LANG
+# Argumentos:
+#   Ninguno
+# Retorno:
+#   Ninguno
+################################################################################
 function verificar_localizacion() {
-  # Verificar si se pasó una localización como parámetro.
   if [ "$LOCALIZACION" != "" ]; then
-    # Verificar que la localización solicitada esté implementada.
+    # Se verifica que la localización solicitada esté implementada.
     if [ -d "../palabras/RAE/l10n/$LOCALIZACION" -o \
          -d "../palabras/noRAE/l10n/$LOCALIZACION" ]; then
-      # Cambiamos la localización y codificación de caracteres.
+      # Se cambia la localización y codificación de caracteres.
       LANG="$LOCALIZACION.UTF-8"
       echo "Creando un diccionario para la localización '$LOCALIZACION'..."
     else
@@ -145,22 +197,29 @@ function verificar_localizacion() {
       fi
     fi
   else
-    # Si no se pasó el parámetro de localización, asumimos que se desea
-    # generar el diccionario genérico.
+    # Si no se pasó el parámetro de localización, se asume que se desea generar
+    # el diccionario genérico.
     echo "No se definió una localización; creando el diccionario genérico..."
     LANG="es_ES.UTF-8"
     LOCALIZACION="es_ANY"
   fi
 }
 
-function main() {
-
-  comprobar_herramientas_necesarias
-
-  analizar_parametros "$@"
-
-  verificar_localizacion
-
+################################################################################
+# Genera en un directorio temporal los archivos de afijos (.aff) y de palabras
+# (.dic) para la localización indicada.
+# Globales:
+#   LOCALIZACION
+#   MDTMPDIR
+#   AFFIX
+#   TMPWLIST
+#   DICFILE
+# Argumentos:
+#   Ninguno
+# Retorno:
+#   Ninguno
+################################################################################
+function generar_diccionario() {
   # Crear un directorio temporal de trabajo
   MDTMPDIR="$($MKTEMP -d /tmp/makedict.XXXXXXXXXX)"
 
@@ -251,7 +310,27 @@ function main() {
 
   # Restauramos la variable de entorno LANG
   LANG=$LANG_BAK
+}
 
+################################################################################
+# Crea el paquete del diccionario con todos sus archivos adicionales, como
+# iconos, xml de especificación del diccionario, archivos de licencia, etc.
+# Globales:
+#   LOCALIZACION
+#   PAIS
+#   LOCALIZACIONES
+#   TEXTO_LOCAL
+#   ICONO
+#   DESCRIPCION
+#   MDTMPDIR
+#   DIRECTORIO_TRABAJO
+#   ZIPFILE
+# Argumentos:
+#   Ninguno
+# Retorno:
+#   Ninguno
+################################################################################
+function crear_paquete() {
   # Crear paquete de diccionario
   case $LOCALIZACION in
     es_AR)
@@ -474,6 +553,22 @@ function main() {
   rm -Rf "$MDTMPDIR"
 
   echo "¡Proceso finalizado!"
+}
+
+function main() {
+
+  comprobar_herramientas_necesarias
+
+  analizar_parametros "$@"
+
+  # Se hace una copia del valor de la variable LANG para poder restaurarla.
+  LANG_BAK=$LANG
+
+  verificar_localizacion
+
+  generar_diccionario
+
+  crear_paquete
 }
 
 main "$@"
