@@ -2140,6 +2140,7 @@ botarel/S
 botavante/S
 botellazo/S
 botellero/S
+botellón/S
 bote/pS
 botero/S
 botijo/S
@@ -3081,7 +3082,7 @@ chascarro/SN
 chasco/S
 chasis
 chasquido/S
-chat
+chat/S
 chauvinismo/S
 chavetero/S
 chavo/S
@@ -4588,6 +4589,7 @@ dril/S
 drino/iS
 droguete/S
 dromedario/S
+dron/S
 dropacismo/S
 drope/S
 druida/OS
@@ -5768,6 +5770,7 @@ federativo/S
 feldespato/S
 félido/S
 felpudo/S
+feminicidio/S
 femenino/S
 feminismo/S
 femoral/S
@@ -11914,6 +11917,7 @@ sumiller/S
 suministro/S
 sumo/fSk
 sumulista/S
+sunami
 superávit
 superiorato/S
 superior/S

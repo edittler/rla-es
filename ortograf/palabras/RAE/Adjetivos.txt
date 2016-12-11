@@ -3396,7 +3396,7 @@ cultivado/SG
 culto/qkGS
 cultor/GS
 cultual/S
-cultural/S
+cultural/SO
 cultureta/S
 cumanagoto/GS
 cumplida/k
@@ -8228,6 +8228,7 @@ monomaniaco/GS
 monometalista/S
 monomiario/S
 monona/S
+monoparental/S
 monopolizador/GS
 monorrimo/SG
 monosilábico/GS
@@ -8362,6 +8363,7 @@ mulso/GS
 multicaule/S
 multicolor/S
 multicopista/S
+multicultural/SO
 multifloro/GS
 multiforme/S
 multilateral/S
