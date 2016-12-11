@@ -212,8 +212,8 @@ fi
 # Generar el fichero con la lista de palabras (únicas), indicando en la
 # primera línea el número de palabras que contiene.
 DICFILE="$MDTMPDIR/$LOCALIZACION.dic"
-sort -u < "$TMPWLIST" | wc -l | cut -d ' ' -f1 > "$DICFILE"
-sort -u < "$TMPWLIST" >> "$DICFILE"
+sort -f -u < "$TMPWLIST" | wc -l | tr -d ' ' > "$DICFILE"
+sort -f -u < "$TMPWLIST" >> "$DICFILE"
 rm -f "$TMPWLIST"
 echo "¡listo!"
 
